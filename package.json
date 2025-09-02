@@ -1,0 +1,20 @@
+{
+  "name": "stepup",
+  "version": "1.0.0",
+  "description": "killer",
+  "homepage": "https://github.com/lanzarote0tr/StepUp#readme",
+  "bugs": {
+    "url": "https://github.com/lanzarote0tr/StepUp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lanzarote0tr/StepUp.git"
+  },
+  "license": "ISC",
+  "author": "lanzarote0tr",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  }
+}
