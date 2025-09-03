@@ -6,6 +6,8 @@ import { dirname } from "path";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import fs from 'fs';
 
 import authRouter from "./routes/auth.js";
 import pool from './utils/connectdb.js';
@@ -19,7 +21,6 @@ dotenv.config();
 var app = express();
 
 // Security
-import helmet from "helmet";
 app.use(helmet());
 
 app.set('trust proxy', 2); // Trust first two proxies: Nginx and Cloudflare
