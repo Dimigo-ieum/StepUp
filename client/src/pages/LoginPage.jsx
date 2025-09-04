@@ -1,20 +1,19 @@
 // src/pages/LoginPage.jsx
 
 import * as React from 'react';
-import { useState } from 'react'; // 비밀번호 표시/숨기기를 위한 useState import
+import { useState } from 'react';
 
 // 로고, 아이콘, 추가 컴포넌트 import
 import logo from '../assets/Tlogo.svg';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
+import { Link as RouterLink } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
@@ -22,9 +21,8 @@ import { IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '@mui/icons-material/Google';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import Naver from '../assets/Naver.png';
-
+import { useAuth } from '../context/AuthContext'; // 1. useAuth 훅을 import 합니다.
 
 
 // 저작권 정보를 표시하는 컴포넌트 (수정 가능)
@@ -41,8 +39,9 @@ function Copyright(props) {
     );
 }
 
+
 export default function LoginPage() {
-    // 비밀번호 보이기/숨기기 상태를 관리할 state
+    const { login } = useAuth() // 2. AuthContext에서 login 함수를 가져옵니다.
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -50,16 +49,15 @@ export default function LoginPage() {
         event.preventDefault();
     };
 
-    // 폼 제출 시 실행될 함수
+    // 3. 폼 제출 시 login 함수를 호출하도록 수정합니다.
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
         const password = data.get('password');
-        console.log({
-            email: email,
-            password: password,
-        });
+        
+        // login 함수 호출
+        login(email, password);
     };
 
     return (
@@ -73,17 +71,12 @@ export default function LoginPage() {
                     alignItems: 'center',
                 }}
             >
-                {/* 1. 서비스 로고 추가 */}
                 <Box
                     component="img"
                     src={logo}
                     alt="Step Up Logo"
                     sx={{ height: 50, mb: 2 }}
                 />
-
-                {/*<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar>*/}
                 <Typography component="h1" variant="h5">
                     로그인
                 </Typography>
@@ -103,7 +96,6 @@ export default function LoginPage() {
                             },
                         }}
                     />
-                    {/* 2. 비밀번호 보이기/숨기기 기능이 추가된 TextField */}
                     <TextField
                         margin="normal"
                         required
@@ -137,7 +129,6 @@ export default function LoginPage() {
                         control={<Checkbox value="remember" color="primary" />}
                         label="기억하기"
                     />
-                    {/* 3. 메인 버튼 색상 변경 */}
                     <Button
                         type="submit"
                         fullWidth
@@ -156,7 +147,6 @@ export default function LoginPage() {
                         로그인
                     </Button>
 
-                    {/* 4. 소셜 로그인 버튼 추가 */}
                     <Divider sx={{ my: 2 }}>OR</Divider>
                     <Button
                         fullWidth
@@ -180,14 +170,14 @@ export default function LoginPage() {
                         Naver 계정으로 로그인
                     </Button>
 
-                    <Grid container sx={{ mt: 2 }}>
+                    <Grid container justifyContent="space-between" sx={{ mt: 2 }}>
                         <Grid item xs>
                             <Link href="#" variant="body2">
                                 비밀번호를 잊으셨나요?
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link component={RouterLink} to="/register" variant="body2">
                                 {"계정이 없으신가요? 회원가입"}
                             </Link>
                         </Grid>

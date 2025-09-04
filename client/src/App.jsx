@@ -1,11 +1,16 @@
-// src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import Layout from './components/Layout';
+
+// 페이지 컴포넌트들을 모두 import 합니다.
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import MyPage from './pages/MyPage';
+import ProjectCreatePage from './pages/ProjectCreatePage';
 
 // MUI 기본 테마 설정 (선택 사항)
 const theme = createTheme();
@@ -19,8 +24,11 @@ function App() {
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePage />} />
                     <Route path="projects" element={<ProjectsPage />} />
+                    <Route path="projects/:projectId" element={<ProjectDetailPage />} />
                     <Route path="login" element={<LoginPage />} />
-                    {/* 여기에 새로운 페이지 라우트를 추가할 수 있습니다. */}
+                    <Route path="register" element={<RegisterPage />} />
+                    <Route path="mypage" element={<MyPage />} />
+                    <Route path="/project/create" element={<ProjectCreatePage />} />
                 </Route>
             </Routes>
         </ThemeProvider>
@@ -28,3 +36,4 @@ function App() {
 }
 
 export default App;
+
