@@ -22,6 +22,7 @@
     "dev-client": "npm -C client run dev"
   },
   "dependencies": {
+    "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
     "createerror": "^1.3.0",
     "dotenv": "^17.2.1",

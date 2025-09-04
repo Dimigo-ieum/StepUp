@@ -9,7 +9,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import fs from 'fs';
 
-import authRouter from "./routes/auth.js";
+import apiRouter from "./routes/api.js";
 import pool from './utils/connectdb.js';
 
 // __dirname
@@ -69,13 +69,12 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 // API routes should be defined before the catch-all route
-app.use("/api/auth", authRouter);
+app.use("/api", apiRouter);
 
 // Catch-all handler for client-side routing
 app.get(/(.*)/, (req, res) => {

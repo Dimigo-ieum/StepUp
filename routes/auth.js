@@ -2,8 +2,25 @@ import express from 'express';
 import createError from 'http-errors';
 import pool from '../utils/connectdb.js';
 import sendVerificationEmail from '../utils/sendemail.js';
+import argon2 from "argon2";
 
 var router = express.Router();
+
+const ARGON_OPTS = {
+  type: argon2.argon2id,
+  memoryCost: 64 * 1024,  // 64 MiB
+  timeCost: 3,            // iterations
+  parallelism: 1          // raise if you can
+  // Optionally: secret: Buffer.from(process.env.PEPPER, 'utf8')  // if supported
+};
+
+export async function hashPassword(password) {
+  return await argon2.hash(password, ARGON_OPTS);   // returns PHC string
+}
+
+export async function verifyPassword(hash, password) {
+  return await argon2.verify(hash, password);
+}
 
 async function createId() {
   var id;
@@ -30,6 +47,8 @@ async function genToken() {
 
 router.post('/signup', async function(req, res, next) {
   const { email, password, display_name, role } = req.body;
+  const hashedPassword = await hashPassword(password);
+  console.log(hashedPassword)
   try {
     const [rst] = await pool.query(
       "SELECT * FROM users WHERE email_normalized = ?",
@@ -47,7 +66,7 @@ router.post('/signup', async function(req, res, next) {
     // Create user in the database
     var [result] = await pool.query(
       "INSERT INTO users (id, email, password_hash, display_name, role) VALUES (?, ?, ?, ?, ?)",
-      [id, email, password, display_name, role]
+      [id, email, hashedPassword, display_name, role]
     );
   } catch (err) {
     next(createError(500, "Error fetching users"));
@@ -118,14 +137,16 @@ router.post('/login', async function(req, res, next) {
       return;
     }
     const user = rst[0];
-    if (user.password_hash !== password) {
+    if (!await verifyPassword(user.password_hash, password)) {
       next(createError(401, "Invalid email or password"));
       return;
     }
-    res.status(200).json({ message: "Login successful", user });
+    res.status(200).json({ message: "Login successful" });
   } catch (err) {
     next(createError(500, "Error logging in"));
   }
 });
+
+
 
 export default router;
