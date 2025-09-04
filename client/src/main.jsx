@@ -1,15 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom' // BrowserRouter import
-import { AuthProvider } from './context/AuthContext.jsx'
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import { ProjectProvider } from './context/ProjectContext' // 1. ProjectProvider를 import 합니다.
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <BrowserRouter>
             <AuthProvider>
-                <App />
+                <ProjectProvider>
+                    <App />
+                </ProjectProvider>
             </AuthProvider>
         </BrowserRouter>
-    </React.StrictMode>
+    </React.StrictMode>,
 )
