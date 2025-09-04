@@ -2,12 +2,14 @@ import React from 'react';
 import { Container, Grid, Typography, Box, TextField, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { mockProjects } from '../data/mockProjects';
+//import { mockProjects } from '../data/mockProjects';
+import { useProjects } from '../context/ProjectContext';
 import ProjectCard from '../components/ProjectCard';
 
 export default function ProjectsPage() {
+    const { projects } = useProjects();
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container sx={{ mt: 4, mb: 4 }}>
             <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
                 전체 프로젝트
             </Typography>
@@ -49,7 +51,7 @@ export default function ProjectsPage() {
             </Box>
 
             <Grid container spacing={4}>
-                {mockProjects.map((project) => (
+                {projects.map((project) => (
                     <Grid item key={project.id} xs={12} sm={6} md={4} sx={{ display: 'flex' }}>
                         <ProjectCard project={project} />
                     </Grid>

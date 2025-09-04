@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useProjects } from '../context/ProjectContext';
+import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { Container, Box, Typography, TextField, Button, Stack } from '@mui/material';
 
 export default function ProjectCreatePage() {
     const { user } = useAuth();
+    const { addProject } = useProjects();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -33,9 +37,14 @@ export default function ProjectCreatePage() {
             budget: parseInt(formData.budget) || 0,
             skills: formData.skills.split(',').map(s => s.trim()),
             applicants: 0,
+            title: formData.title,
+            description: formData.description,
+            period: formData.period,
         };
+        addProject(newProject);
         console.log("새로운 프로젝트 데이터:", newProject);
         alert('프로젝트 등록이 완료되었습니다. (콘솔 확인)');
+        navigate('/projects');
     };
 
     return (

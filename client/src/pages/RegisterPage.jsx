@@ -5,6 +5,7 @@ import { Container, Box, Typography, TextField, Button, Grid, ToggleButtonGroup,
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // 1. useAuth 훅을 import 합니다.
 
+
 const initialFormData = {
     email: '',
     password: '',
@@ -37,7 +38,7 @@ export default function RegisterPage() {
         });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (formData.password !== formData.confirmPassword) {
             alert("비밀번호가 일치하지 않습니다.");
@@ -46,24 +47,25 @@ export default function RegisterPage() {
 
         // 3. 제출할 사용자 데이터를 구성합니다.
         const submissionData = {
-            userType,
             email: formData.email,
-            password: formData.password, // 실제 앱에서는 비밀번호를 이렇게 다루면 안 됩니다!
+            password: formData.password,
+            role: userType, // API 명세에 따라 'role'로 통일
+            // 전개 구문(...)을 사용하여 조건부로 속성을 추가합니다.
             ...(userType === 'youth'
                 ? {
                     name: formData.name,
                     major: formData.major,
-                    skills: formData.skills.split(',').map(s => s.trim()).filter(s => s) // 빈 문자열 제거
+                    skills: formData.skills.split(',').map(s => s.trim()).filter(s => s)
                 }
                 : {
-                    name: formData.companyName, // 기업회원의 경우 담당자 이름으로 name을 통일
+                    name: formData.companyName, // 기업회원의 경우 담당자 이름으로 'name' 통일
                     companyName: formData.companyName,
                     businessNumber: formData.businessNumber
                 })
         };
 
         // 4. register 함수를 호출하여 회원가입을 시도합니다.
-        register(submissionData);
+        await register(submissionData);
     };
 
     return (
