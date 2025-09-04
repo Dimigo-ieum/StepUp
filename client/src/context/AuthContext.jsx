@@ -15,11 +15,11 @@ export function AuthProvider({ children }) {
         const checkSession = async () => {
             try {
                 // GET /auth/session API 호출
-                const response = await apiClient.get('/api/auth/session');
+                const response = await apiClient.get('auth/session');
                 setUser(response.data.user); // 성공 시 사용자 정보 저장
 
                 // 로그인 상태이므로, CSRF 토큰도 함께 요청
-                const csrfResponse = await apiClient.get('/api/auth/csrf');
+                const csrfResponse = await apiClient.get('auth/csrf');
                 setCsrfToken(csrfResponse.data.csrf_token);
 
             } catch (error) {
@@ -38,7 +38,8 @@ export function AuthProvider({ children }) {
     const register = async (userData) => {
         try {
             // POST /auth/signup API 호출
-            await apiClient.post('/api/auth/signup', userData);
+            console.log(userData);
+            await apiClient.post('/auth/signup', userData);
             alert('회원가입이 완료되었습니다. 이메일 인증 후 로그인해주세요.');
             navigate('/login');
         } catch (error) {
@@ -51,13 +52,13 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         try {
             // POST /auth/login API 호출
-            await apiClient.post('/api/auth/login', { email, password });
+            await apiClient.post('/auth/login', { email, password });
 
             // 로그인 성공 후, 세션 정보와 CSRF 토큰을 다시 가져옵니다.
-            const sessionResponse = await apiClient.get('/api/auth/session');
+            const sessionResponse = await apiClient.get('/auth/session');
             setUser(sessionResponse.data.user);
 
-            const csrfResponse = await apiClient.get('/api/auth/csrf');
+            const csrfResponse = await apiClient.get('/auth/csrf');
             setCsrfToken(csrfResponse.data.csrf_token);
 
             navigate('/');
@@ -71,7 +72,7 @@ export function AuthProvider({ children }) {
     const logout = async () => {
         try {
             // POST /auth/logout API 호출
-            await apiClient.post('/api/auth/logout');
+            await apiClient.post('/auth/logout');
         } catch (error) {
             console.error("로그아웃 실패:", error);
         } finally {
