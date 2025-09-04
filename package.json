@@ -15,8 +15,11 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "npm -C client run build",
+    "dev": "concurrently \"npm:dev-server\" \"npm:dev-client\"",
+    "dev-server": "node app.js",
+    "dev-client": "npm -C client run dev"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",

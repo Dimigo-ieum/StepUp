@@ -106,5 +106,26 @@ router.post('/verify', async function(req, res, next) {
   res.status(200).json({ message: "Email verified successfully" });
 });
 
+router.post('/login', async function(req, res, next) {
+  const { email, password } = req.body;
+  try {
+    const [rst] = await pool.query(
+      "SELECT * FROM users WHERE email_normalized = ?",
+      [email.toLowerCase()]
+    );
+    if (rst.length === 0) {
+      next(createError(401, "Invalid email or password"));
+      return;
+    }
+    const user = rst[0];
+    if (user.password_hash !== password) {
+      next(createError(401, "Invalid email or password"));
+      return;
+    }
+    res.status(200).json({ message: "Login successful", user });
+  } catch (err) {
+    next(createError(500, "Error logging in"));
+  }
+});
 
 export default router;
