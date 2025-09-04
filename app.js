@@ -21,7 +21,7 @@ dotenv.config();
 var app = express();
 
 // Security
-app.use(helmet());
+// app.use(helmet());
 
 app.set('trust proxy', 2); // Trust first two proxies: Nginx and Cloudflare
 
@@ -41,7 +41,7 @@ const BLOCKED_IPS = new Set(
 
 async function logger(req, res) {
   try {
-    await pool.query("INSERT INTO RequestLogs (timestamp, ip, method, url, userAgent, referrer, status, contentLength) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [new Date(), req.ip, req.method, req.originalUrl, req.get('user-agent'), req.get('referer') || null , res.statusCode, res.get('content-length') || 0]);
+    await pool.query("INSERT INTO requests (timestamp, ip, method, url, userAgent, referrer, status, contentLength) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [new Date(), req.ip, req.method, req.originalUrl, req.get('user-agent'), req.get('referer') || null , res.statusCode, res.get('content-length') || 0]);
   } catch (err) {
     console.error("Error logging request:", err);
   }
@@ -113,5 +113,7 @@ app.use(function (err, req, res, next) {
   res.status(parsed_error.status);
   res.render("error", { error: parsed_error });
 });
+
+app.listen(process.env.PORT || 3000);
 
 export default app;
