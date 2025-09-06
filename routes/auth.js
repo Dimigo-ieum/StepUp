@@ -90,6 +90,7 @@ router.post('/signup', async function(req, res, next) {
     return;
   }
   res.status(201).json({ id: result.insertId, email });
+  return;
 });
 
 router.post('/verify', async function(req, res, next) {
@@ -106,6 +107,7 @@ router.post('/verify', async function(req, res, next) {
   rst = rst[0];
   if (rst.length === 0) {
     next(createError(404, "Token invalid"));
+    return;
   }
   if (new Date(rst.expires_at) < new Date()) {
     next(createError(410, "Token expired"));
@@ -123,6 +125,7 @@ router.post('/verify', async function(req, res, next) {
     return;
   }
   res.status(200).json({ message: "Email verified successfully" });
+  return;
 });
 
 router.post('/login', async function(req, res, next) {
@@ -142,11 +145,12 @@ router.post('/login', async function(req, res, next) {
       return;
     }
     res.status(200).json({ message: "Login successful" });
+    console.log("someone logged in!!");
+    return;
   } catch (err) {
     next(createError(500, "Error logging in"));
+    return;
   }
 });
-
-
 
 export default router;

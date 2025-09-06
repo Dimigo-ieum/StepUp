@@ -76,14 +76,9 @@ app.use(express.static(path.join(__dirname, 'client', 'dist')));
 // API routes should be defined before the catch-all route
 app.use("/api", apiRouter);
 
-// Catch-all handler for client-side routing
-app.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
 // error handler
@@ -117,7 +112,8 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(parsed_error.status);
-  res.render("error", { error: parsed_error });
+  res.json(parsed_error);
+  return;
 });
 
 app.listen(process.env.PORT || 3000);
